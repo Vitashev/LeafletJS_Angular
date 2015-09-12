@@ -11,9 +11,13 @@
 	<script src="js/app.js"></script>
 	<script src="js/map_controller.js"></script>
 	<script src="js/map_directive.js"></script>
-	<script src="js/houses.js"></script>
 </head>
 <body ng-controller="MapCtrl">
-	<map height="500px" width="1000px" zoom="7"></map>
+	<form>
+          <input type="number" step="any" ng-model="center.lat" /> Latitude
+          <input type="number" step="any" ng-model="center.lng" /> Longitude
+          <input type="number" step="any" ng-model="zoom" /> Zoom
+      </form>
+	<map height="500px" width="1000px" zoom="7" coordinates="true"></map>
 </body>
 </html>

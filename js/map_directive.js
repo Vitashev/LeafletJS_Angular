@@ -25,7 +25,13 @@
 			maxZoom: 19
 		}).addTo(scope.map);
 		
-		scope.$watch("center", function(center) {
+		scope.info = L.control.info();
+		scope.coordinates = L.control.coordinates()
+		
+		scope.info.addTo(scope.map);
+		scope.coordinates.addTo(scope.map);
+		
+		scope.$watch("center.lat", function(center) {
         	if (center !== undefined)
 				scope.map.setView(center, scope.zoom);
 		});
@@ -33,11 +39,6 @@
 		scope.$watch("geojson", function(geojson) {
         	if (geojson !== undefined)
 				geojson.addTo(scope.map);
-		});
-		
-		scope.$watch("info", function(info) {
-        	if (info !== undefined)
-				info.addTo(scope.map);
 		});
 
 	}
