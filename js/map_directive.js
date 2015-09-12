@@ -34,6 +34,11 @@
         	if (geojson !== undefined)
 				geojson.addTo(scope.map);
 		});
+		
+		scope.$watch("info", function(info) {
+        	if (info !== undefined)
+				info.addTo(scope.map);
+		});
 
 	}
 
