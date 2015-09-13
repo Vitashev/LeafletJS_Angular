@@ -46,7 +46,7 @@
     angular.module('restApp').directive("map", function () {
 		return {
 			restrict: 'E',
-			template: '<div id="map"></div><p id="latlng">00.0, 00.0</p>',
+			template: '<div id="map"></div>',
 			controller: 'MapCtrl',
 			link: link
 		};

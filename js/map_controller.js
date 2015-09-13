@@ -57,47 +57,6 @@
             style: style,
             onEachFeature: infoOnEachFeature
         });
-        
-        // Information div class
-        
-        L.Control.Info = L.Control.extend({
-            
-            onAdd: function (map) {
-                this._div = L.DomUtil.create('div', 'map_info'); // create a div with a class "info"
-                this.update();
-                return this._div;
-            },
-            
-            update: function (house) {
-                this._div.innerHTML = '<h4>House info</h4>' +  (house ?
-                    '<b>' + house.name + '</b><br>' + house.description : "Select house");
-            }   
-        });
-        
-        L.control.info = function () {
-            return new L.Control.Info();
-        };
-        
-        // Coordinates div class
-        
-        L.Control.Coordinates = L.Control.extend({
-            
-            onAdd: function (map) {
-                this._div = L.DomUtil.create('div', 'leaflet-control-mouseposition');
-                map.on('mousemove', this.updateCoordinates, this);
-                this._div.innerHTML = '';
-                return this._div;
-            },
-            
-            updateCoordinates: function (e) {
-                this._div.innerHTML = e.latlng.lng + ' : ' + e.latlng.lat;
-            }
-
-        });
-        
-        L.control.coordinates = function () {
-            return new L.Control.Coordinates();
-        };
 
     }]);
 
