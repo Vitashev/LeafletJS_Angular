@@ -1,5 +1,9 @@
 L.Control.Info = L.Control.extend({
-
+        
+        options: {
+           position: 'topright'   
+        },
+        
         onAdd: function (map) {
                 this._div = L.DomUtil.create('div', 'map_info'); // create a div with a class "info"
                 this.update();

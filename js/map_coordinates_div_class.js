@@ -7,13 +7,13 @@ L.Control.Coordinates = L.Control.extend({
         onAdd: function (map) {
                 this._div = L.DomUtil.create('div', 'map_coordinates');
                 map.on('mousemove', this.updateCoordinates, this);
-                this._div.innerHTML = '0.00 : 0.00';
+                this._div.innerHTML = '00.0000 : 00.0000';
                 return this._div;
         },
 
         updateCoordinates: function (e) {
-                this._div.innerHTML = this.formatNum(e.latlng.lng) + ' : ' 
-                        + this.formatNum(e.latlng.lat);
+                this._div.innerHTML = this.formatNum(e.latlng.lat) + ' : ' 
+                        + this.formatNum(e.latlng.lng);
         },
         
         formatNum: function (num) {

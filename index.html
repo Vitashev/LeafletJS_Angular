@@ -18,8 +18,8 @@
 	<form>
           <input type="number" step="any" ng-model="center.lat" /> Latitude
           <input type="number" step="any" ng-model="center.lng" /> Longitude
-          <input type="number" step="any" ng-model="zoom" /> Zoom
+          <input type="number" step="any" ng-model="center.zoom" /> Zoom
       </form>
-	<map height="500px" width="1000px" zoom="7" coordinates="true"></map>
+	<map height="500px" width="100%" zoom="7" coordinates="true" info="true" center="center"></map>
 </body>
 </html>
