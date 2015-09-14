@@ -16,10 +16,10 @@
 </head>
 <body ng-controller="MapCtrl">
 	<form>
-          <input type="number" step="any" ng-model="center.lat" /> Latitude
-          <input type="number" step="any" ng-model="center.lng" /> Longitude
-          <input type="number" step="any" ng-model="center.zoom" /> Zoom
+          <input type="number" step="any" ng-model="center1.lat" /> Latitude
+          <input type="number" step="any" ng-model="center1.lng" /> Longitude
+          <input type="number" step="any" ng-model="center1.zoom" /> Zoom
       </form>
-	<map height="500px" width="100%" zoom="7" coordinates="true" info="true" center="center"></map>
+	<leaflet_map height="500px" width="100%" zoom="7" coordinates="true" info="true" center="center1" interactivity="false"></leaflet_map>
 </body>
 </html>
