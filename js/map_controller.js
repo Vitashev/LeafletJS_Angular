@@ -35,7 +35,7 @@
         }
 
         function infoZoomToFeature(e) {
-            map.fitBounds(e.target.getBounds());
+            $scope.map.fitBounds(e.target.getBounds());
         }
 
         function infoOnEachFeature(feature, layer) {

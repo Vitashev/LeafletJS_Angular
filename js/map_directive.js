@@ -58,10 +58,9 @@
 		
 		updateMapView();
 		
-		scope.$watch("geojson", function(geojson) {
-        	if (geojson !== undefined)
-				geojson.addTo(scope.map);
-		});
+        if (scope.geojson !== undefined) {
+			scope.geojson.addTo(scope.map);
+		}
 		
 		scope.$watch("center.lat", function(center) {
 			updateMapView();
@@ -75,6 +74,23 @@
 			updateMapView();
 		});
 		
+		scope.map.on("dragend", function () {
+        	scope.$apply(function (scope) {
+            	scope.center.lat = scope.map.getCenter().lat;
+                scope.center.lng = scope.map.getCenter().lng;
+            });
+         });
+
+         scope.map.on("zoomend", function () {
+         	if (scope.center.zoom !== scope.map.getZoom()) {
+            	scope.$apply(function (scope) {
+                	scope.center.zoom = scope.map.getZoom();
+                	scope.center.lat = scope.map.getCenter().lat;
+            		scope.center.lng = scope.map.getCenter().lng;
+                });
+            }
+         });
+		
 		function updateMapView () {
 			scope.map.setView(scope.center, scope.center.zoom);
 		}
@@ -87,7 +103,8 @@
 			template: '<div id="map"></div>',
 			controller: 'MapCtrl',
 			scope: {
-				center: '=center'
+				center: '=center',
+				geojson: '=geojson',
 			},
 			link: link
 		};
