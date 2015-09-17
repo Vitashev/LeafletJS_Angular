@@ -4,6 +4,7 @@
 	<title>LeafletJS</title>
 	<meta charset="utf-8" />
 	<link rel="stylesheet" href="css/leaflet.css" />
+	<link rel="stylesheet" href="css/leaflet.draw.css" />
 	<link rel="stylesheet" href="css/style.css" />
 	<script src="js/leaflet.js"></script>
 	<script src="js/angular.min.js"></script>
@@ -13,6 +14,7 @@
 	<script src="js/map_coordinates_div_class.js"></script>
 	<script src="js/map_controller.js"></script>
 	<script src="js/map_directive.js"></script>
+	<script src="js/leaflet.draw.js"></script>
 </head>
 <body ng-controller="MapCtrl">
 	<form>
@@ -20,6 +22,6 @@
           <input type="number" step="any" ng-model="center1.lng" /> Longitude
           <input type="number" step="any" ng-model="center1.zoom" /> Zoom
       </form>
-	<leaflet_map height="500px" width="100%" coordinates="true" info="true" center="center1" interactivity="true"></leaflet_map>
+	<leaflet_map height="500px" width="100%" coordinates="true" info="true" center="center1" interactivity="true" add="true"></leaflet_map>
 </body>
 </html>
