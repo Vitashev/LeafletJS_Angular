@@ -92,7 +92,7 @@
 				$(".leaflet-control-zoom").css("visibility", "hidden");
 
 			}
-			/*
+			
 			if (attrs.add === 'true') {
 				var drawnItems = new L.FeatureGroup();
 				scope.map.addLayer(drawnItems);
@@ -104,7 +104,7 @@
 						circle: false,
 						polygon: {
 							shapeOptions: {
-								color: '#bada55'
+								color: '#A52A2A'
 							}
 						}
 					},
@@ -118,7 +118,7 @@
 
 				scope.map.on('draw:created', function (e) {
 					var type = e.layerType;
-					var geojson;
+					var layer = e.layer;
 					
 					var name = prompt('Object name:', ''),
 						description = prompt('Object description', '');
@@ -138,10 +138,11 @@
 					}
 
 					console.log(e.layerType);
-					L.geoJson(geojson).addTo(scope.map);
+					//L.geoJson(geojson).addTo(scope.map);
+					scope.map.addLayer(layer);
 				});
 			}
-			*/
+			
 			if (scope.center === undefined) {
 				scope.center = defaults.position;
 			}
