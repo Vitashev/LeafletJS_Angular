@@ -25,43 +25,15 @@
 
 		checkAttrs();
 
-		updateMapView();
-
-		scope.$watch("center.lat", function (center) {
-			updateMapView();
-		});
-
-		scope.$watch("center.lng", function (center) {
-			updateMapView();
-		});
-
-		scope.$watch("center.zoom", function (center) {
-			updateMapView();
-		});
-		
-		// Listen to map center change by user
-		
-		scope.map.on("dragend", function () {
-			scope.$apply(function (scope) {
-				scope.center.lat = scope.map.getCenter().lat;
-                scope.center.lng = scope.map.getCenter().lng;
-            });
-		});
-
-		scope.map.on("zoomend", function () {
-			if (scope.center.zoom !== scope.map.getZoom()) {
-				scope.$apply(function (scope) {
-					scope.center.zoom = scope.map.getZoom();
-					scope.center.lat = scope.map.getCenter().lat;
-					scope.center.lng = scope.map.getCenter().lng;
-                });
+		scope.updateMapView = function (position) {
+            if (position) {
+                scope.map.setView(position, position.zoom);
+            } else {
+                scope.map.setView(scope.center, scope.center.zoom);
             }
-		});
+        }
 
-		function updateMapView() {
-			scope.map.setView(scope.center, scope.center.zoom);
-
-		}
+		scope.updateMapView();
 
 		function checkAttrs() {
 			$('#map').css({ 'height': attrs.height || defaults.height });
@@ -124,21 +96,9 @@
 						description = prompt('Object description', '');
 
 					if (type === 'polygon' || 'rectangle') {
-						geojson = {
-							"type": "Feature",
-							"geometry": {
-								"type": "Polygon",
-								"coordinates": e.layer._latlngs
-							},
-							"properties": {
-								"name": name,
-								"description": description
-							}
-						}
+
 					}
 
-					console.log(e.layerType);
-					//L.geoJson(geojson).addTo(scope.map);
 					scope.map.addLayer(layer);
 				});
 			}
@@ -148,8 +108,64 @@
 			}
 
 			if (scope.geojson !== undefined) {
-				scope.geojson.addTo(scope.map);
+				scope.objects = L.geoJson(scope.geojson, {
+            		style: style,
+            		onEachFeature: infoOnEachFeature
+        		});
+				set_geoJson();
 			}
+		}
+
+		// GeoJson objects styling functions
+        
+        function style(feature) {
+            return {
+                fillColor: '#FD8D3C',
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
+
+        function infoHighlightFeature(e) {
+            var layer = e.target;
+
+            layer.setStyle({
+                weight: 5,
+                color: '#666',
+                dashArray: '',
+                fillOpacity: 0.7
+            });
+            scope.info.update(layer.feature.properties);
+        };
+
+        function infoResetHighlight(e) {
+            scope.objects.resetStyle(e.target);
+            scope.info.update();
+        }
+
+        function infoZoomToFeature(e) {
+            scope.map.fitBounds(e.target.getBounds());
+        }
+
+        function infoOnEachFeature(feature, layer) {
+            layer.on({
+                mouseover: infoHighlightFeature,
+                mouseout: infoResetHighlight,
+                click: infoZoomToFeature
+            });
+        }
+
+        // GeoJson adding and removal functions
+
+        function set_geoJson () {
+        	scope.objects.addTo(scope.map);
+        }
+
+        function clear_geoJson () {
+  			scope.map.removeLayer(scope.objects);
 		}
 
 	}
@@ -159,10 +175,6 @@
 			restrict: 'E',
 			template: '<div id="map"></div>',
 			controller: 'MapCtrl',
-			scope: {
-				center: '=center',
-				geojson: '=geojson',
-			},
 			link: link
 		};
 
