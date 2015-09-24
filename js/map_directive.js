@@ -14,17 +14,6 @@
 
 		// Map init
 
-		scope.map = L.map('map'); // drawControl is for Leaflet Draw plugin
-
-		scope.baseLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-			minZoom: 5,
-			maxZoom: 19
-		});
-		scope.baseLayer.addTo(scope.map);
-
-		checkAttrs();
-
 		scope.updateMapView = function (position) {
             if (position) {
                 scope.map.setView(position, position.zoom);
@@ -33,86 +22,128 @@
             }
         }
 
-		scope.updateMapView();
+		scope.createMap = function () {
+			scope.map = L.map('map'); // drawControl is for Leaflet Draw plugin
+
+			scope.baseLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+				minZoom: 5,
+				maxZoom: 19
+			});
+			scope.baseLayer.addTo(scope.map);
+
+			checkAttrs();
+
+			scope.updateMapView();
+		}
+
+		scope.removeMap = function () {
+			scope.map.remove();
+		}
+
+		scope.createMap();
 
 		function checkAttrs() {
-			$('#map').css({ 'height': attrs.height || defaults.height });
-			$('#map').css({ 'width': attrs.width || defaults.width });
-
-			if (attrs.info === 'true') {
-				scope.info = L.control.info();
-				scope.info.addTo(scope.map);
-			}
-
-			if (attrs.coordinates === 'true') {
-				scope.coordinates = L.control.coordinates()
-				scope.coordinates.addTo(scope.map);
-			}
-
-			if (attrs.interactivity === 'false') {
-				scope.map.dragging.disable();
-				scope.map.touchZoom.disable();
-				scope.map.doubleClickZoom.disable();
-				scope.map.scrollWheelZoom.disable();
-				scope.map.boxZoom.disable();
-				scope.map.keyboard.disable();
-
-				if (scope.map.tap)
-					scope.map.tap.disable();
-
-				$('#map').css({ 'cursor': 'default' });
-				$(".leaflet-control-zoom").css("visibility", "hidden");
-
-			}
 			
-			if (attrs.add === 'true') {
-				var drawnItems = new L.FeatureGroup();
-				scope.map.addLayer(drawnItems);
+			checkCssAttrs();
+			checkInfoAttr();
+			checkCoordinatesAttr();
+			checkInteractivityAttr();
+			checkAddAttr();
+			checkCenter();
+			checkGeojson();
 
-				var drawControl = new L.Control.Draw({
-					draw: {
-						polyline: false,
-						marker: false,
-						circle: false,
-						polygon: {
-							shapeOptions: {
-								color: '#A52A2A'
+			function checkCssAttrs () {
+				$('#map').css({ 'height': attrs.height || defaults.height });
+				$('#map').css({ 'width': attrs.width || defaults.width });
+			}
+
+			function checkInfoAttr () {
+				if (attrs.info === 'true') {
+					scope.info = L.control.info();
+					scope.info.addTo(scope.map);
+				}
+			}
+
+			function checkCoordinatesAttr () {
+				if (attrs.coordinates === 'true') {
+					scope.coordinates = L.control.coordinates()
+					scope.coordinates.addTo(scope.map);
+				}
+			}
+
+			function checkInteractivityAttr () {
+				if (attrs.interactivity === 'false') {
+					scope.map.dragging.disable();
+					scope.map.touchZoom.disable();
+					scope.map.doubleClickZoom.disable();
+					scope.map.scrollWheelZoom.disable();
+					scope.map.boxZoom.disable();
+					scope.map.keyboard.disable();
+
+					if (scope.map.tap)
+						scope.map.tap.disable();
+
+					$('#map').css({ 'cursor': 'default' });
+					$(".leaflet-control-zoom").css("visibility", "hidden");
+
+				}
+			}
+
+			function checkAddAttr () {
+				if (attrs.add === 'true') {
+					var drawnItems = new L.FeatureGroup();
+					scope.map.addLayer(drawnItems);
+
+					var drawControl = new L.Control.Draw({
+						draw: {
+							polyline: false,
+							marker: false,
+							circle: false,
+							polygon: {
+								shapeOptions: {
+									color: '#A52A2A'
+								}
 							}
+						},
+						edit: {
+							featureGroup: drawnItems,
+							edit: false,
+							remove: false
 						}
-					},
-					edit: {
-						featureGroup: drawnItems,
-						edit: false,
-						remove: false
-					}
-				});
-				scope.map.addControl(drawControl);
+					});
+					scope.map.addControl(drawControl);
 
-				scope.map.on('draw:created', function (e) {
-					var type = e.layerType;
-					var layer = e.layer;
-					
-					var name = prompt('Object name:', ''),
-						description = prompt('Object description', '');
+					scope.map.on('draw:created', function (e) {
+						var type = e.layerType;
+						var layer = e.layer;
+						
+						var name = prompt('Object name:', ''),
+							description = prompt('Object description', '');
 
-					if (type === 'polygon' || 'rectangle') {
+						if (type === 'polygon' || 'rectangle') {
 
-					}
+						}
 
-					scope.map.addLayer(layer);
-				});
-			}
-			
-			if (scope.center === undefined) {
-				scope.center = defaults.position;
+						scope.map.addLayer(layer);
+					});
+				}
 			}
 
-			if (scope.geojson !== undefined) {
-				scope.objects = L.geoJson(scope.geojson, {
-            		style: style,
-            		onEachFeature: infoOnEachFeature
-        		});
-				set_geoJson();
+			function checkCenter () {
+				if (scope.center === undefined) {
+					scope.center = defaults.position;
+				}
+			}
+
+			function checkGeojson () {
+				if (scope.geojson !== undefined) {
+					scope.objects = L.geoJson(scope.geojson, {
+	            		style: style,
+	            		onEachFeature: infoOnEachFeature
+	        		});
+					setGeoJson();
+				}
 			}
 		}
 
@@ -160,12 +191,29 @@
 
         // GeoJson adding and removal functions
 
-        function set_geoJson () {
+        function setGeoJson () {
         	scope.objects.addTo(scope.map);
         }
 
-        function clear_geoJson () {
+        function clearGeoJson () {
   			scope.map.removeLayer(scope.objects);
+		}
+
+		// Map adding and removal functions
+
+		function createMap () {
+			scope.map = L.map('map'); // drawControl is for Leaflet Draw plugin
+
+			scope.baseLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+				minZoom: 5,
+				maxZoom: 19
+			});
+			scope.baseLayer.addTo(scope.map);
+
+			checkAttrs();
+
+			scope.updateMapView();
 		}
 
 	}
