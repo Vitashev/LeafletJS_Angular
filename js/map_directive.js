@@ -12,6 +12,8 @@
 			},
 		};
 
+		scope.mapCreated = false;
+
 		// Map init
 
 		scope.updateMapView = function (position) {
@@ -23,22 +25,37 @@
         }
 
 		scope.createMap = function () {
-			scope.map = L.map('map'); // drawControl is for Leaflet Draw plugin
+			if (!scope.mapCreated) {
+				scope.map = L.map('map'); // drawControl is for Leaflet Draw plugin
 
-			scope.baseLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-				minZoom: 5,
-				maxZoom: 19
-			});
-			scope.baseLayer.addTo(scope.map);
+				scope.baseLayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+					minZoom: 5,
+					maxZoom: 19
+				});
+				scope.baseLayer.addTo(scope.map);
 
-			checkAttrs();
+				checkAttrs();
 
-			scope.updateMapView();
+				scope.updateMapView();
+
+				scope.mapCreated = true;
+			}	
 		}
 
 		scope.removeMap = function () {
-			scope.map.remove();
+			if (scope.mapCreated) {
+				if (scope.coordinates === 'true')
+					scope.coordinates.removeFrom(scope.map);
+				if (scope.info === 'true')
+					scope.info.removeFrom(scope.map);
+				if (scope.add === 'true')
+					scope.drawControl.removeFrom(scope.map);
+
+				scope.map.remove();
+
+				scope.mapCreated = false;
+			}
 		}
 
 		scope.createMap();
@@ -95,7 +112,7 @@
 					var drawnItems = new L.FeatureGroup();
 					scope.map.addLayer(drawnItems);
 
-					var drawControl = new L.Control.Draw({
+					scope.drawControl = new L.Control.Draw({
 						draw: {
 							polyline: false,
 							marker: false,
@@ -112,7 +129,7 @@
 							remove: false
 						}
 					});
-					scope.map.addControl(drawControl);
+					scope.map.addControl(scope.drawControl);
 
 					scope.map.on('draw:created', function (e) {
 						var type = e.layerType;

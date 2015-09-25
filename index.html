@@ -21,7 +21,8 @@
           <button ng-click="updateMapView({lat: 51.50, lng: -0.1250, zoom: 10})">London</button>
           <button ng-click="updateMapView({lat: 48.85, lng: 2.35, zoom: 10})">Paris</button>
           <button ng-click="updateMapView({lat: 49.842, lng: 24.032, zoom: 17})">Lviv</button>
-          <button style="floar: right" ng-click="removeMap()">Remove map</button>
+          <button ng-click="removeMap()">Remove map</button>
+          <button ng-click="createMap()">Restore map</button>
     </form>
 	<leaflet_map height="500px" width="100%" coordinates="true" info="true" interactivity="true" add="true"></leaflet_map>
 </body>
